@@ -1,2 +1,2 @@
 # social_book
-this is a photo post site
+This is a photo post site
