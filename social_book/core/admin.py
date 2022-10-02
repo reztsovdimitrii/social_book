@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Profile, Post
+from .models import Profile, Post, LikePost
 
 
 class ProfileAdmin(admin.ModelAdmin):
@@ -23,10 +23,20 @@ class PostAdmin(admin.ModelAdmin):
         'create_at',
         'no_of_likes'
     )
+    list_editable = ('user',)
     search_fields = ('user',)
-    list_filter = ('create_at')
+    list_filter = ('create_at', 'user',)
     empty_value_display = '-пусто'
 
 
-admin.site.register(Profile)
-admin.site.register(Post)
+class LikePostAdmin(admin.ModelAdmin):
+    list_display = (
+        'post_id',
+        'username'
+    )
+    empty_value_display = '-пусто'
+
+
+admin.site.register(Profile, ProfileAdmin)
+admin.site.register(Post, PostAdmin)
+admin.site.register(LikePost, LikePostAdmin)

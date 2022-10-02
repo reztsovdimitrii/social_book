@@ -34,4 +34,20 @@ class Post(models.Model):
     no_of_likes = models.IntegerField(default=0)
     
     def __str__(self) -> str:
-        return str(self.user)
+        return str(self.id)
+
+
+class LikePost(models.Model):
+    post_id = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        related_name='like_post'
+    )
+    username = models.ForeignKey(
+        Profile,
+        on_delete=models.CASCADE,
+        related_name='like_post'
+    )
+
+    def __str__(self) -> str:
+        return str(self.username)

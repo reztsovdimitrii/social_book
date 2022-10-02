@@ -1,9 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
 
-from .models import Profile, Post
+from .models import LikePost, Profile, Post
 
 
 @login_required(login_url='signin')
@@ -29,6 +29,29 @@ def upload(request):
         return redirect('/')
     else:
         return redirect('/')
+
+
+@login_required(login_url='signin')
+def like_post(request):
+    username = get_object_or_404(Profile, user=request.user.id)
+    post_id = request.GET.get('post_id')
+    post = Post.objects.get(id=post_id)
+    like_filter = LikePost.objects.filter(post_id=post, username=username).first()
+    print(like_filter)
+    if like_filter is None:
+        new_like = LikePost.objects.create(post_id=post, username=username)
+        new_like.save()
+        post.no_of_likes = post.no_of_likes+1
+        post.save()
+        return redirect('/')
+    else:
+        like_filter.delete()
+        post.no_of_likes = post.no_of_likes-1
+        post.save()
+        return redirect('/')
+
+    print(post_id)
+    pass
 
 
 @login_required(login_url='signin')
